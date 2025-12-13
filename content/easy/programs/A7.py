@@ -10,6 +10,6 @@ def merge_two_lists(l1: ListNode, l2: ListNode) -> ListNode:
             current.next = l2
             l2 = l2.next
         current = current.next
-
+    
     current.next = l1 if l1 else l2
     return dummy.next

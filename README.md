@@ -1,10 +1,11 @@
-# AlgoRhythm 🎵
+# AlgoRhythm
 
 A modern typing practice app for mastering algorithm templates through muscle memory.
 
 ## Features
 
-- **Monaco Editor Integration**: Professional code editor with syntax highlighting
+- **Monaco Editor Integration**:
+  - Professional code editor with syntax highlighting
 - **Real-time Visual Feedback**:
   - Correct characters reveal syntax highlighting
   - Incorrect characters shown in red with error background
@@ -15,7 +16,7 @@ A modern typing practice app for mastering algorithm templates through muscle me
   - Progress persisted to localStorage
 - **Color-coded Performance**:
   - 🟢 Green: 100% accuracy
-  - 🟡 Yellow: 60-99% accuracy  
+  - 🟡 Yellow: 60-99% accuracy
   - 🔴 Red: Below 60% accuracy
 - **Keyboard Shortcuts**:
   - `Enter`: Proceed to next problem (after completion)
@@ -103,4 +104,4 @@ def two_sum(nums: list[int], target: int) -> list[int]:
 
 ## License
 
-MIT
+MIT License

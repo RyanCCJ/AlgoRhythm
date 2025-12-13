@@ -7,5 +7,5 @@ def reverse_list(head: ListNode) -> ListNode:
         curr.next = prev
         prev = curr
         curr = next_temp
-
+    
     return prev

@@ -1,7 +1,7 @@
 def has_cycle(head: ListNode) -> bool:
     if not head:
         return False
-
+    
     slow = head
     fast = head
 
@@ -10,5 +10,5 @@ def has_cycle(head: ListNode) -> bool:
         fast = fast.next.next
         if slow == fast:
             return True
-
+    
     return False
