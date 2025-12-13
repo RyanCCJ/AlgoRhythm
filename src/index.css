@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #111827;
+  /* gray-900 */
+}
+
+/* Custom Cursor for Monaco Editor */
+.custom-cursor {
+  border-left: 2px solid #10b981;
+  /* emerald-500 */
+  animation: blink 1s step-end infinite;
+}
+
+.custom-cursor.error {
+  border-left-color: #ef4444;
+  /* red-500 */
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Monaco Editor Overrides */
+.monaco-editor .lines-content .cigr {
+  /* Ensure grayscale works if applied via class */
+}
+
+.char-correct {
+  color: #10b981 !important;
+  /* emerald-500 */
+}
+
+.char-error {
+  background-color: rgba(239, 68, 68, 0.3) !important;
+  /* red-500/30 */
+  color: #fca5a5 !important;
+  /* red-300 */
+}
+
+.char-untyped {
+  opacity: 0.4;
+  filter: grayscale(100%);
+}
