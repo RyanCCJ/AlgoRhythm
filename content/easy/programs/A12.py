@@ -4,11 +4,11 @@ def level_order(root: TreeNode) -> list[list[int]]:
     
     result = []
     queue = [root]
-
+    
     while queue:
         level_size = len(queue)
         current_level = []
-
+        
         for _ in range(level_size):
             node = queue.pop(0)
             current_level.append(node.val)

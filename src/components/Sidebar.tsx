@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppStore, Difficulty } from '../store/useAppStore';
-import { Circle } from 'lucide-react';
+import { Circle, RotateCcw } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export const Sidebar: React.FC = () => {
@@ -10,18 +10,56 @@ export const Sidebar: React.FC = () => {
         getProblemsByDifficulty,
         currentProblemId,
         selectProblem,
-        userProgress
+        userProgress,
+        resetProgress
     } = useAppStore();
+
+    const [showConfirm, setShowConfirm] = useState(false);
 
     const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
     const problems = getProblemsByDifficulty(currentDifficulty);
 
+    const handleReset = () => {
+        resetProgress();
+        setShowConfirm(false);
+    };
+
     return (
         <div className="w-80 bg-gray-900 border-r border-gray-800 flex flex-col h-full">
             <div className="p-4 border-b border-gray-800">
-                <h1 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                    <span className="text-emerald-500">Algo</span>Rhythm
-                </h1>
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                        <span className="text-emerald-500">Algo</span>Rhythm
+                    </h1>
+                    <button
+                        onClick={() => setShowConfirm(true)}
+                        className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-gray-800 rounded-md transition-colors"
+                        title="Reset Progress"
+                    >
+                        <RotateCcw size={16} />
+                    </button>
+                </div>
+
+                {showConfirm && (
+                    <div className="mb-4 p-3 bg-red-900/30 border border-red-700/50 rounded-lg">
+                        <p className="text-sm text-red-300 mb-2">Reset all progress?</p>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={handleReset}
+                                className="flex-1 px-3 py-1 text-sm bg-red-600 hover:bg-red-500 text-white rounded"
+                            >
+                                Yes
+                            </button>
+                            <button
+                                onClick={() => setShowConfirm(false)}
+                                className="flex-1 px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded"
+                            >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 <div className="flex bg-gray-800 rounded-lg p-1">
                     {difficulties.map((diff) => (
                         <button

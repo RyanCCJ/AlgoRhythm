@@ -11,14 +11,12 @@ export const TypingArea: React.FC = () => {
     const [userInput, setUserInput] = useState('');
     const [startTime, setStartTime] = useState<number | null>(null);
     const [isFinished, setIsFinished] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
     const [finalAccuracy, setFinalAccuracy] = useState(0);
     const [mistakeIndices, setMistakeIndices] = useState<Set<number>>(new Set());
 
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Reset state when problem changes and auto-focus
     useEffect(() => {
         setUserInput('');
         setStartTime(null);
@@ -29,14 +27,32 @@ export const TypingArea: React.FC = () => {
             editorRef.current.setScrollTop(0);
             editorRef.current.setPosition({ lineNumber: 1, column: 1 });
         }
-        // Auto-focus container when problem loads
-        // Use setTimeout to ensure DOM is ready
         setTimeout(() => containerRef.current?.focus(), 50);
     }, [problem?.id]);
 
-    // Auto-focus on initial page load
     useEffect(() => {
         setTimeout(() => containerRef.current?.focus(), 100);
+
+        // Inject strong CSS to override syntax highlighting
+        const style = document.createElement('style');
+        style.id = 'typing-area-override';
+        style.textContent = `
+            .char-untyped,
+            .char-untyped * {
+                color: #666666 !important;
+                opacity: 1 !important;
+            }
+        `;
+        if (!document.getElementById('typing-area-override')) {
+            document.head.appendChild(style);
+        }
+
+        return () => {
+            const existingStyle = document.getElementById('typing-area-override');
+            if (existingStyle) {
+                existingStyle.remove();
+            }
+        };
     }, []);
 
     const handleNextProblem = () => {
@@ -63,10 +79,8 @@ export const TypingArea: React.FC = () => {
             return;
         }
 
-        // Ignore modifier keys alone
         if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(e.key)) return;
 
-        // Prevent default browser actions for some keys to avoid scrolling/navigating
         if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
             e.preventDefault();
         }
@@ -79,19 +93,27 @@ export const TypingArea: React.FC = () => {
         let charToAppend = '';
 
         if (e.key === 'Enter') {
+            const code = problem.code;
+            const currentLength = userInput.length;
             charToAppend = '\n';
+            let targetPos = currentLength + 1;
+            if (code[currentLength] === '\n') {
+                while (targetPos < code.length && (code[targetPos] === ' ' || code[targetPos] === '\t')) {
+                    charToAppend += code[targetPos];
+                    targetPos++;
+                }
+            }
         } else if (e.key === 'Tab') {
-            e.preventDefault(); // Prevent focus change
-            charToAppend = '    '; // 4 spaces
+            e.preventDefault();
+            charToAppend = '    ';
         } else if (e.key.length === 1) {
             charToAppend = e.key;
         } else {
-            return; // Ignore other special keys
+            return;
         }
 
         if (startTime === null) setStartTime(Date.now());
 
-        // Check for mistakes character by character
         const currentLength = userInput.length;
 
         for (let i = 0; i < charToAppend.length; i++) {
@@ -110,16 +132,11 @@ export const TypingArea: React.FC = () => {
         setUserInput(prev => {
             const nextInput = prev + charToAppend;
 
-            // Check completion
             if (nextInput.length >= problem.code.length) {
                 const endTime = Date.now();
                 const timeInMinutes = (endTime - (startTime || Date.now())) / 60000;
                 const words = nextInput.length / 5;
                 const wpm = Math.round(words / timeInMinutes) || 0;
-
-                // Re-evaluating the "stale state" issue:
-                // React state updates are batched. We can't rely on `mistakeIndices` having the *latest* mistakes from THIS keypress yet.
-                // So we should compute the *final* set of mistakes to use for calculation.
 
                 const currentMistakes = new Set(mistakeIndices);
                 for (let i = 0; i < charToAppend.length; i++) {
@@ -139,7 +156,6 @@ export const TypingArea: React.FC = () => {
                 }
 
                 const numerator = currentMistakes.size;
-                // Ensure we don't divide by zero, though unlikely
                 const accuracy = denominator === 0 ? 100 : Math.max(0, Math.round((1 - numerator / denominator) * 100));
 
                 setIsFinished(true);
@@ -155,18 +171,11 @@ export const TypingArea: React.FC = () => {
         });
     };
 
-    // ... (omitted decorations logic for brevity in this tool call, assuming it's unchanged) ...
-    // Wait, I can't omit logic if I'm replacing a block.
-    // I need to target the specific blocks.
-    // Let's target the completion block first.
-
-    // Construct display code: User Input + Remaining Target Code
     const displayCode = useMemo(() => {
         if (!problem) return '';
         return userInput + problem.code.slice(userInput.length);
     }, [userInput, problem]);
 
-    // Update decorations
     useEffect(() => {
         if (!editorRef.current || !problem) return;
 
@@ -176,7 +185,6 @@ export const TypingArea: React.FC = () => {
         const decorations: monaco.editor.IModelDeltaDecoration[] = [];
         const code = problem.code;
 
-        // 1. Untyped text (Gray out)
         const currentPos = model.getPositionAt(userInput.length);
         const endPos = model.getPositionAt(code.length);
 
@@ -192,7 +200,6 @@ export const TypingArea: React.FC = () => {
             });
         }
 
-        // 2. Error highlighting
         for (let i = 0; i < userInput.length; i++) {
             if (userInput[i] !== code[i]) {
                 const start = model.getPositionAt(i);
@@ -207,7 +214,6 @@ export const TypingArea: React.FC = () => {
             }
         }
 
-        // 3. Cursor
         if (!isFinished) {
             decorations.push({
                 range: new monaco.Range(currentPos.lineNumber, currentPos.column, currentPos.lineNumber, currentPos.column),
@@ -226,7 +232,7 @@ export const TypingArea: React.FC = () => {
         );
         (editorRef.current as any)._oldDecorations = decorationIds;
 
-    }, [userInput, problem, isFinished, displayCode]); // Added displayCode dependency
+    }, [userInput, problem, isFinished, displayCode]);
 
     if (!problem) {
         return (
@@ -246,19 +252,13 @@ export const TypingArea: React.FC = () => {
             ref={containerRef}
             tabIndex={0}
             onKeyDown={handleKeyDown}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            onClick={() => containerRef.current?.focus()}
         >
-            {!isFocused && !isFinished && (
-                <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 backdrop-blur-[1px] cursor-pointer"
-                    onClick={() => containerRef.current?.focus()}>
-                    <div className="bg-gray-800/90 text-white px-6 py-3 rounded-full shadow-lg border border-gray-700 font-medium animate-pulse">
-                        Click or Press any key to focus
-                    </div>
-                </div>
-            )}
-
             <div className="flex-1 relative">
+                <div
+                    className="absolute inset-0 z-10 cursor-text"
+                    onClick={() => containerRef.current?.focus()}
+                />
                 <Editor
                     height="100%"
                     language="python"
@@ -278,12 +278,30 @@ export const TypingArea: React.FC = () => {
                             horizontal: 'hidden'
                         },
                         domReadOnly: true,
+                        tabIndex: -1,
                     }}
                     onMount={(editor) => {
                         editorRef.current = editor;
                         (editor as any)._oldDecorations = [];
-                        // Force layout after mount to ensure correct sizing
-                        setTimeout(() => editor.layout(), 100);
+
+                        // Apply initial decorations immediately
+                        setTimeout(() => {
+                            if (problem) {
+                                const model = editor.getModel();
+                                if (model) {
+                                    const endPos = model.getPositionAt(problem.code.length);
+                                    const decorations = [{
+                                        range: new monaco.Range(1, 1, endPos.lineNumber, endPos.column),
+                                        options: {
+                                            inlineClassName: 'char-untyped'
+                                        }
+                                    }];
+                                    (editor as any)._oldDecorations = editor.deltaDecorations([], decorations);
+                                }
+                            }
+                            editor.layout();
+                            containerRef.current?.focus();
+                        }, 50);
                     }}
                 />
 

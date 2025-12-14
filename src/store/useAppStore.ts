@@ -32,6 +32,7 @@ interface AppState {
     setDifficulty: (difficulty: Difficulty) => void;
     selectProblem: (problemId: string) => void;
     completeProblem: (problemId: string, wpm: number, accuracy: number) => void;
+    resetProgress: () => void;
 
     // Computed
     getProblemsByDifficulty: (difficulty: Difficulty) => Problem[];
@@ -51,6 +52,13 @@ export const useAppStore = create<AppState>()(
             setDifficulty: (difficulty) => set({ currentDifficulty: difficulty }),
 
             selectProblem: (problemId) => set({ currentProblemId: problemId }),
+
+            resetProgress: () => set({
+                userProgress: {
+                    completedProblems: [],
+                    problemStats: {},
+                }
+            }),
 
             completeProblem: (problemId, wpm, accuracy) => set((state) => {
                 const stats = state.userProgress.problemStats[problemId] || { bestWpm: 0, accuracy: 0, attempts: 0, lastPlayed: '' };

@@ -59,6 +59,7 @@ body {
 }
 
 .char-untyped {
-  opacity: 0.4;
-  filter: grayscale(100%);
+  color: #4b5563 !important;
+  /* gray-600 - dark enough to look untyped */
+  opacity: 1 !important;
 }

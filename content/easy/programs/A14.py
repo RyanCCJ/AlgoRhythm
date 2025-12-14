@@ -1,9 +1,9 @@
 def first_bad_version(n: int) -> int:
     left, right = 1, n
-
+    
     while left < right:
         mid = left + (right - left) // 2
-
+        
         if isBadVersion(mid):
             right = mid
         else:

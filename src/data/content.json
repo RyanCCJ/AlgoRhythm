@@ -18,14 +18,14 @@
       "id": "A3",
       "title": "3. Best Time to Buy and Sell Stock",
       "description": "# 3. Best Time to Buy and Sell Stock\n\n## 題目\n給定陣列 prices,prices[i] 是第 i 天的股票價格。選擇某一天買入,在未來某天賣出,計算最大利潤。\n\n## 面試重點\n此題測試動態維護最小值與最大差值的能力,是一次遍歷問題的典型代表。\n面試官會觀察是否能避免巢狀迴圈,用單次掃描解決。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 若可以進行多次交易(但不能同時持有兩筆),該如何修改?\n- 若有交易手續費,演算法如何調整?",
-      "code": "def max_profit(prices: list[int]) -> int:\n    min_price = float('inf')\n    max_profit = 0\n\n    for price in prices:\n        min_price = min(min_price, price)\n        max_profit = max(max_profit, price - min_price)\n    \n    return max_profit",
+      "code": "def max_profit(prices: list[int]) -> int:\n    min_price = float('inf')\n    max_profit = 0\n    \n    for price in prices:\n        min_price = min(min_price, price)\n        max_profit = max(max_profit, price - min_price)\n    \n    return max_profit",
       "difficulty": "easy"
     },
     {
       "id": "A4",
       "title": "4. Majority Element",
       "description": "# 4. Majority Element\n\n## 題目\n給定大小為 n 的陣列,找出出現次數超過 ⌊n/2⌋ 的元素(保證存在)。\n\n## 面試重點\n此題測試 Boyer-Moore 投票演算法的理解,是常數空間解法的經典應用。\n面試官會先讓你用 HashMap 解,再追問能否優化到 O(1) 空間。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 若不保證存在 majority element,如何驗證結果?\n- 若要找出現次數超過 ⌊n/3⌋ 的所有元素,該如何修改?",
-      "code": "def majority_element(nums: list[int]) -> int:\n    candidate = None\n    count = 0\n\n    for num in nums:\n        if count == 0:\n            candidate = num\n        count += 1 if num == candidate else -1\n    \n    return candidate",
+      "code": "def majority_element(nums: list[int]) -> int:\n    candidate = None\n    count = 0\n    \n    for num in nums:\n        if count == 0:\n            candidate = num\n        count += 1 if num == candidate else -1\n    \n    return candidate",
       "difficulty": "easy"
     },
     {
@@ -39,21 +39,21 @@
       "id": "A6",
       "title": "6. Reverse Linked List",
       "description": "# 6. Reverse Linked List\n\n## 題目\n反轉一個單向鏈結串列,回傳反轉後的頭節點。\n\n## 面試重點\n此題是 LinkedList 操作的基礎,測試指標操作與迭代/遞迴兩種思維。\n面試官通常會要求同時寫出迭代與遞迴版本。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(1) 迭代版,O(n) 遞迴版\n\n## Follow-up\n- 能否用遞迴實作?空間複雜度的差異?\n- 若要反轉特定區間 [left, right],該如何修改?",
-      "code": "def reverse_list(head: ListNode) -> ListNode:\n    prev = None\n    curr = head\n\n    while curr:\n        next_temp = curr.next\n        curr.next = prev\n        prev = curr\n        curr = next_temp\n    \n    return prev",
+      "code": "def reverse_list(head: ListNode) -> ListNode:\n    prev = None\n    curr = head\n    \n    while curr:\n        next_temp = curr.next\n        curr.next = prev\n        prev = curr\n        curr = next_temp\n    \n    return prev",
       "difficulty": "easy"
     },
     {
       "id": "A7",
       "title": "7. Merge Two Sorted Lists",
       "description": "# 7. Merge Two Sorted Lists\n\n## 題目\n合併兩個已排序的鏈結串列,回傳合併後的新鏈結串列頭節點。\n\n## 面試重點\n此題測試 dummy node 技巧與雙指標遍歷,是鏈結串列合併的標準模板。\n面試官會觀察邊界處理,例如其中一個串列為空的情況。\n\n## 複雜度\n- 時間複雜度:O(m + n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 能否用遞迴實作?\n- 若要合併 k 個已排序鏈結串列,該用什麼方法?",
-      "code": "def merge_two_lists(l1: ListNode, l2: ListNode) -> ListNode:\n    dummy = ListNode(0)\n    current = dummy\n\n    while l1 and l2:\n        if l1.val < l2.val:\n            current.next = l1\n            l1 = l1.next\n        else:\n            current.next = l2\n            l2 = l2.next\n        current = current.next\n    \n    current.next = l1 if l1 else l2\n    return dummy.next",
+      "code": "def merge_two_lists(l1: ListNode, l2: ListNode) -> ListNode:\n    dummy = ListNode(0)\n    current = dummy\n    \n    while l1 and l2:\n        if l1.val < l2.val:\n            current.next = l1\n            l1 = l1.next\n        else:\n            current.next = l2\n            l2 = l2.next\n        current = current.next\n    \n    current.next = l1 if l1 else l2\n    return dummy.next",
       "difficulty": "easy"
     },
     {
       "id": "A8",
       "title": "8. Linked List Cycle",
       "description": "# 8. Linked List Cycle\n\n## 題目\n給定一個鏈結串列,判斷其中是否有環(cycle)。\n\n## 面試重點\n此題測試 Floyd's Cycle Detection(快慢指標)演算法,是空間優化的經典案例。\n面試官會先讓你用 HashSet 解,再追問 O(1) 空間解法。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 若要找出環的起始節點,該如何修改?\n- 若要計算環的長度,該如何實作?",
-      "code": "def has_cycle(head: ListNode) -> bool:\n    if not head:\n        return False\n    \n    slow = head\n    fast = head\n\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow == fast:\n            return True\n    \n    return False",
+      "code": "def has_cycle(head: ListNode) -> bool:\n    if not head:\n        return False\n    \n    slow = head\n    fast = head\n    \n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow == fast:\n            return True\n    \n    return False",
       "difficulty": "easy"
     },
     {
@@ -67,7 +67,7 @@
       "id": "A10",
       "title": "10. Invert Binary Tree",
       "description": "# 10. Invert Binary Tree\n\n## 題目\n給定一個二元樹的根節點,將整棵樹左右翻轉。\n\n## 面試重點\n此題測試樹的遞迴修改,是理解 in-place 操作的基礎題。\n面試官會觀察是否能用簡潔的遞迴或迭代方式實作。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(h)\n\n## Follow-up\n- 能否用 BFS 迭代實作?\n- 若樹非常大,如何避免遞迴 stack overflow?",
-      "code": "def invert_tree(root: TreeNode) -> TreeNode:\n    if not root:\n        return None\n    \n    root.left, root.right = root.right, root.left\n\n    invert_tree(root.left)\n    invert_tree(root.right)\n    \n    return root",
+      "code": "def invert_tree(root: TreeNode) -> TreeNode:\n    if not root:\n        return None\n    \n    root.left, root.right = root.right, root.left\n    \n    invert_tree(root.left)\n    invert_tree(root.right)\n    \n    return root",
       "difficulty": "easy"
     },
     {
@@ -81,35 +81,35 @@
       "id": "A12",
       "title": "12. Binary Tree Level Order Traversal",
       "description": "# 12. Binary Tree Level Order Traversal\n\n## 題目\n給定二元樹的根節點,回傳其節點值的層序遍歷(由上到下,每層由左到右)。\n\n## 面試重點\n此題是 BFS 的標準應用,測試 queue 的使用與層級分離技巧。\n面試官會觀察是否能正確記錄每層的節點數,避免層級混淆。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(w),w 為最大寬度\n\n## Follow-up\n- 能否用 DFS 實作層序遍歷?\n- 若要鋸齒狀層序遍歷(奇數層反向),該如何修改?",
-      "code": "def level_order(root: TreeNode) -> list[list[int]]:\n    if not root:\n        return []\n    \n    result = []\n    queue = [root]\n\n    while queue:\n        level_size = len(queue)\n        current_level = []\n\n        for _ in range(level_size):\n            node = queue.pop(0)\n            current_level.append(node.val)\n\n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        \n        result.append(current_level)\n    \n    return result",
+      "code": "def level_order(root: TreeNode) -> list[list[int]]:\n    if not root:\n        return []\n    \n    result = []\n    queue = [root]\n    \n    while queue:\n        level_size = len(queue)\n        current_level = []\n        \n        for _ in range(level_size):\n            node = queue.pop(0)\n            current_level.append(node.val)\n\n            if node.left:\n                queue.append(node.left)\n            if node.right:\n                queue.append(node.right)\n        \n        result.append(current_level)\n    \n    return result",
       "difficulty": "easy"
     },
     {
       "id": "A13",
       "title": "13. Binary Search",
       "description": "# 13. Binary Search\n\n## 題目\n給定一個已排序陣列 nums 與目標值 target,若 target 存在於陣列中,回傳其索引,否則回傳 -1。\n\n## 面試重點\n此題是二分搜尋的標準模板,測試對搜尋空間縮減的理解。\n面試官會特別注意邊界條件,例如 left/right 指標的更新方式,避免無窮迴圈。\n\n## 複雜度\n- 時間複雜度:O(log n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 若陣列有重複元素,如何找第一個/最後一個出現位置?\n- 若要在旋轉排序陣列中搜尋,該如何修改?",
-      "code": "def binary_search(nums: list[int], target: int) -> int:\n    left, right = 0, len(nums) - 1\n\n    while left <= right:\n        mid = left + (right - left) // 2\n        \n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    \n    return -1",
+      "code": "def binary_search(nums: list[int], target: int) -> int:\n    left, right = 0, len(nums) - 1\n    \n    while left <= right:\n        mid = left + (right - left) // 2\n        \n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    \n    return -1",
       "difficulty": "easy"
     },
     {
       "id": "A14",
       "title": "14. First Bad Version",
       "description": "# 14. First Bad Version\n\n## 題目\n假設你是產品經理,有 n 個版本 [1, 2, ..., n],從某個版本開始都是壞的。\n給定 API isBadVersion(version),找出第一個壞版本,最小化 API 呼叫次數。\n\n## 面試重點\n此題是二分搜尋的變形,測試在搜尋邊界模糊時的處理能力。\n面試官會觀察如何正確收斂到第一個滿足條件的位置。\n\n## 複雜度\n- 時間複雜度:O(log n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 若 isBadVersion 呼叫成本很高,如何進一步減少呼叫次數?\n- 若版本號不連續,該如何調整演算法?",
-      "code": "def first_bad_version(n: int) -> int:\n    left, right = 1, n\n\n    while left < right:\n        mid = left + (right - left) // 2\n\n        if isBadVersion(mid):\n            right = mid\n        else:\n            left = mid + 1\n    \n    return left",
+      "code": "def first_bad_version(n: int) -> int:\n    left, right = 1, n\n    \n    while left < right:\n        mid = left + (right - left) // 2\n        \n        if isBadVersion(mid):\n            right = mid\n        else:\n            left = mid + 1\n    \n    return left",
       "difficulty": "easy"
     },
     {
       "id": "A15",
       "title": "15. Search Insert Position",
       "description": "# 15. Search Insert Position\n\n## 題目\n給定已排序陣列與目標值,找出目標值在陣列中的索引。若不存在,回傳它應該插入的位置。\n\n## 面試重點\n此題測試二分搜尋的邊界處理,特別是找不到時的插入位置判斷。\n面試官會觀察最後 left 指標的位置是否就是插入點。\n\n## 複雜度\n- 時間複雜度:O(log n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 若陣列有重複元素,如何找到插入後保持穩定排序的位置?\n- 若要找大於 target 的最小元素,該如何修改?",
-      "code": "def search_insert(nums: list[int], target: int) -> int:\n    left, right = 0, len(nums) - 1\n\n    while left <= right:\n        mid = left + (right - left) // 2\n\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    \n    return left",
+      "code": "def search_insert(nums: list[int], target: int) -> int:\n    left, right = 0, len(nums) - 1\n    \n    while left <= right:\n        mid = left + (right - left) // 2\n        \n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    \n    return left",
       "difficulty": "easy"
     },
     {
       "id": "A16",
       "title": "16. Valid Parentheses",
       "description": "# 16. Valid Parentheses\n\n## 題目\n給定只包含 '(', ')', '{', '}', '[', ']' 的字串,判斷括號是否有效匹配。\n\n## 面試重點\n此題是 Stack 的經典應用,測試配對問題的基本思維。\n面試官會觀察是否能正確處理不匹配的各種情況(多餘左括號、多餘右括號、類型不匹配)。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(n)\n\n## Follow-up\n- 若字串包含其他字元,如何忽略非括號字元?\n- 若要找出最長有效括號子字串,該用什麼方法?",
-      "code": "def is_valid(s: str) -> bool:\n    stack = []\n    mapping = {')': '(', '}': '{', ']': '['}\n\n    for char in s:\n        if char in mapping:\n            top = stack.pop() if stack else '#'\n            if mapping[char] != top:\n                return False\n        else:\n            stack.append(char)\n    \n    return not stack",
+      "code": "def is_valid(s: str) -> bool:\n    stack = []\n    mapping = {')': '(', '}': '{', ']': '['}\n    \n    for char in s:\n        if char in mapping:\n            top = stack.pop() if stack else '#'\n            if mapping[char] != top:\n                return False\n        else:\n            stack.append(char)\n    \n    return not stack",
       "difficulty": "easy"
     },
     {
@@ -130,14 +130,14 @@
       "id": "A19",
       "title": "19. Climbing Stairs",
       "description": "# 19. Climbing Stairs\n\n## 題目\n爬樓梯到第 n 階,每次可以爬 1 或 2 階,計算有多少種不同的方法爬到頂端。\n\n## 面試重點\n此題是動態規劃的入門題,實質上是 Fibonacci 數列。\n面試官會觀察是否能從遞迴優化到迭代,並理解狀態轉移方程。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 若每次可以爬 1、2 或 3 階,該如何修改?\n- 能否用矩陣快速冪優化到 O(log n)?",
-      "code": "def climb_stairs(n: int) -> int:\n    if n <= 2:\n        return n\n    \n    prev2, prev1 = 1, 2\n\n    for i in range(3, n + 1):\n        current = prev1 + prev2\n        prev2 = prev1\n        prev1 = current\n    \n    return prev1",
+      "code": "def climb_stairs(n: int) -> int:\n    if n <= 2:\n        return n\n    \n    prev2, prev1 = 1, 2\n    \n    for i in range(3, n + 1):\n        current = prev1 + prev2\n        prev2 = prev1\n        prev1 = current\n    \n    return prev1",
       "difficulty": "easy"
     },
     {
       "id": "A20",
       "title": "20. Maximum Subarray",
       "description": "# 20. Maximum Subarray\n\n## 題目\n給定整數陣列 nums,找出總和最大的連續子陣列,回傳其總和。\n\n## 面試重點\n此題是 Kadane's Algorithm 的經典應用,測試動態規劃的貪心思維。\n面試官會觀察是否能理解「當前和為負時重新開始」的核心邏輯。\n\n## 複雜度\n- 時間複雜度:O(n)\n- 空間複雜度:O(1)\n\n## Follow-up\n- 若要回傳子陣列的起始與結束索引,該如何修改?\n- 若是環形陣列,該如何處理?",
-      "code": "def max_subarray(nums: list[int]) -> int:\n    max_sum = nums[0]\n    current_sum = 0\n\n    for num in nums:\n        current_sum = max(num, current_sum + num)\n        max_sum = max(max_sum, current_sum)\n    \n    return max_sum",
+      "code": "def max_subarray(nums: list[int]) -> int:\n    max_sum = nums[0]\n    current_sum = 0\n    \n    for num in nums:\n        current_sum = max(num, current_sum + num)\n        max_sum = max(max_sum, current_sum)\n    \n    return max_sum",
       "difficulty": "easy"
     }
   ],
@@ -363,8 +363,8 @@
     },
     {
       "id": "C12",
-      "title": "52. Minimum Window Substring",
-      "description": "\n\n# 52. Minimum Window Substring\n\n## 題目\n給定字串 s 和 t,找出 s 中包含 t 所有字元的最小子字串。若不存在則回傳空字串。\n\n## 面試重點\n此題是**滑動窗口的終極應用**,測試對窗口伸縮條件的精確控制。\n\n核心思路:\n1. 用 HashMap 記錄 t 中每個字元的需求次數\n2. 雙指標維護窗口:\n   - right 擴展窗口,減少對應字元的需求\n   - 當窗口包含所有字元時,left 收縮窗口\n   - 記錄最小窗口\n3. 用 required 變數追蹤還需要多少不同字元\n4. 用 formed 變數追蹤當前窗口已滿足多少字元\n\n面試官會重點觀察:\n- 能否正確處理字元重複:需要計數而非簡單的 Set\n- 窗口有效性判斷:formed == required\n- 何時收縮窗口:找到有效窗口後\n- 如何更新最小窗口:記錄起始位置和長度\n- 優化:用陣列替代 HashMap(若限定字元集)\n- 邊界:t 為空、s 中不包含 t 的所有字元\n\n**常考公司**:\n- Facebook/Meta(滑動窗口高頻)\n- Google、Amazon\n- 字串處理相關公司\n- 文本分析、搜尋引擎\n\n此題展現了**滑動窗口在複雜約束下的應用**,是字串問題的巔峰。\n\n## 複雜度\n- 時間複雜度:O(|S| + |T|)\n- 空間複雜度:O(|S| + |T|)\n\n## Follow-up\n- 若 t 中包含重複字元,演算法需要調整嗎?\n- 若要找所有最小窗口,該如何修改?\n- 若 s 非常長,是資料流,如何處理?\n- 若要找包含 t 中至少 k 個不同字元的最小窗口,如何調整?",
+      "title": "12. Minimum Window Substring",
+      "description": "# 12. Minimum Window Substring\n\n## 題目\n給定字串 s 和 t,找出 s 中包含 t 所有字元的最小子字串。若不存在則回傳空字串。\n\n## 面試重點\n此題是**滑動窗口的終極應用**,測試對窗口伸縮條件的精確控制。\n\n核心思路:\n1. 用 HashMap 記錄 t 中每個字元的需求次數\n2. 雙指標維護窗口:\n   - right 擴展窗口,減少對應字元的需求\n   - 當窗口包含所有字元時,left 收縮窗口\n   - 記錄最小窗口\n3. 用 required 變數追蹤還需要多少不同字元\n4. 用 formed 變數追蹤當前窗口已滿足多少字元\n\n面試官會重點觀察:\n- 能否正確處理字元重複:需要計數而非簡單的 Set\n- 窗口有效性判斷:formed == required\n- 何時收縮窗口:找到有效窗口後\n- 如何更新最小窗口:記錄起始位置和長度\n- 優化:用陣列替代 HashMap(若限定字元集)\n- 邊界:t 為空、s 中不包含 t 的所有字元\n\n**常考公司**:\n- Facebook/Meta(滑動窗口高頻)\n- Google、Amazon\n- 字串處理相關公司\n- 文本分析、搜尋引擎\n\n此題展現了**滑動窗口在複雜約束下的應用**,是字串問題的巔峰。\n\n## 複雜度\n- 時間複雜度:O(|S| + |T|)\n- 空間複雜度:O(|S| + |T|)\n\n## Follow-up\n- 若 t 中包含重複字元,演算法需要調整嗎?\n- 若要找所有最小窗口,該如何修改?\n- 若 s 非常長,是資料流,如何處理?\n- 若要找包含 t 中至少 k 個不同字元的最小窗口,如何調整?",
       "code": "from collections import Counter\n\ndef min_window(s: str, t: str) -> str:\n    if not s or not t:\n        return \"\"\n    \n    dict_t = Counter(t)\n    required = len(dict_t)\n    \n    left, right = 0, 0\n    formed = 0\n    window_counts = {}\n    \n    ans = float('inf'), None, None\n    \n    while right < len(s):\n        char = s[right]\n        window_counts[char] = window_counts.get(char, 0) + 1\n        \n        if char in dict_t and window_counts[char] == dict_t[char]:\n            formed += 1\n        \n        while left <= right and formed == required:\n            char = s[left]\n            \n            if right - left + 1 < ans[0]:\n                ans = (right - left + 1, left, right)\n            \n            window_counts[char] -= 1\n            if char in dict_t and window_counts[char] < dict_t[char]:\n                formed -= 1\n            \n            left += 1\n        \n        right += 1\n    \n    return \"\" if ans[0] == float('inf') else s[ans[1]:ans[2] + 1]",
       "difficulty": "hard"
     },
