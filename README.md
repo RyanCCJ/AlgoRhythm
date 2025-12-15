@@ -2,6 +2,8 @@
 
 A modern typing practice app for mastering algorithm templates through muscle memory.
 
+![preview](content/preview.png)
+
 ## Features
 
 - **Monaco Editor Integration**:
